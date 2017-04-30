@@ -3,19 +3,19 @@ package com.nalive.samplerecyclerview;
 public class Item {
 
     int image;
-    String imagetitle;
+    String imageTitle;
 
     public int getImage() {
         return image;
     }
 
-    public String getImagetitle() {
-        return imagetitle;
+    public String getImageTitle() {
+        return imageTitle;
     }
 
     public Item(int image, String imagetitle) {
         this.image = image;
-        this.imagetitle = imagetitle;
+        this.imageTitle = imagetitle;
     }
 
 }

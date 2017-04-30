@@ -56,14 +56,14 @@ public class MainActivity extends AppCompatActivity {
 
     class MyAdpater extends RecyclerView.Adapter<MyAdpater.ViewHolder> {
         private Context context;
-        private ArrayList<Item> mItems;
+        private ArrayList<Item> items;
 
         // Allows to remember the last item shown on screen
         private int lastPosition = -1;
 
-        public MyAdpater(ArrayList<Item> items, Context mContext) {
-            mItems = items;
-            context = mContext;
+        public MyAdpater(ArrayList<Item> items, Context context) {
+            this.items = items;
+            this.context = context;
         }
 
         // 필수로 Generate 되어야 하는 메소드 1 : 새로운 뷰 생성
@@ -80,8 +80,8 @@ public class MainActivity extends AppCompatActivity {
         @Override
         public void onBindViewHolder(ViewHolder holder, int position) {
 
-            holder.imageView.setImageResource(mItems.get(position).image);
-            holder.textView.setText(mItems.get(position).imagetitle);
+            holder.imageView.setImageResource(items.get(position).image);
+            holder.textView.setText(items.get(position).imageTitle);
 
             setAnimation(holder.imageView, position);
         }
@@ -89,7 +89,7 @@ public class MainActivity extends AppCompatActivity {
         // // 필수로 Generate 되어야 하는 메소드 3
         @Override
         public int getItemCount() {
-            return mItems.size();
+            return items.size();
         }
 
         public class ViewHolder extends RecyclerView.ViewHolder {
