@@ -17,41 +17,40 @@ import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity {
 
-    Context mContext;
-
     RecyclerView recyclerView;
-    RecyclerView.Adapter Adapter;
-    RecyclerView.LayoutManager layoutManager;
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        mContext = getApplicationContext();
-
         recyclerView = (RecyclerView) findViewById(R.id.recycler_view);
         recyclerView.setHasFixedSize(true);
 
 
-        // Item 리스트에 아이템 객체 넣기
-        ArrayList<Item> items = new ArrayList<>();
+        {
+            // Item 리스트에 아이템 객체 넣기
+            ArrayList<Item> items = new ArrayList<>();
 
-        items.add(new Item(R.drawable.a, "미키마우스"));
-        items.add(new Item(R.drawable.b, "인어공주"));
-        items.add(new Item(R.drawable.c, "디즈니공주"));
-        items.add(new Item(R.drawable.d, "토이스토리"));
-        items.add(new Item(R.drawable.e, "니모를 찾아서"));
+            items.add(new Item(R.drawable.a, "미키마우스"));
+            items.add(new Item(R.drawable.b, "인어공주"));
+            items.add(new Item(R.drawable.c, "디즈니공주"));
+            items.add(new Item(R.drawable.d, "토이스토리"));
+            items.add(new Item(R.drawable.e, "니모를 찾아서"));
 
-        // StaggeredGrid 레이아웃을 사용한다
-        layoutManager = new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL);
-        //layoutManager = new LinearLayoutManager(this);
-        //layoutManager = new GridLayoutManager(this,3);
+            RecyclerView.Adapter adapter = new MyAdpater(items, this);
+            recyclerView.setAdapter(adapter);
+        }
 
-        // 지정된 레이아웃매니저를 RecyclerView에 Set 해주어야한다.
-        recyclerView.setLayoutManager(layoutManager);
+        {
+            RecyclerView.LayoutManager layoutManager;
+            // StaggeredGrid 레이아웃을 사용한다
+            layoutManager = new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL);
+            //layoutManager = new LinearLayoutManager(this);
+            //layoutManager = new GridLayoutManager(this,3);
 
-        Adapter = new MyAdpater(items, mContext);
-        recyclerView.setAdapter(Adapter);
+            // 지정된 레이아웃매니저를 RecyclerView에 Set 해주어야한다.
+            recyclerView.setLayoutManager(layoutManager);
+        }
 
     }
 
@@ -113,6 +112,5 @@ public class MainActivity extends AppCompatActivity {
                 lastPosition = position;
             }
         }
-
     }
 }
