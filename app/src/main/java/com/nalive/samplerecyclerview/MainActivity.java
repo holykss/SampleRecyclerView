@@ -8,8 +8,6 @@ import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.animation.Animation;
-import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -54,7 +52,7 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-    class MyAdpater extends RecyclerView.Adapter<MyAdpater.ViewHolder> {
+    static class MyAdpater extends RecyclerView.Adapter<ViewHolder> {
         private Context context;
         private ArrayList<Item> items;
 
@@ -83,7 +81,7 @@ public class MainActivity extends AppCompatActivity {
             holder.imageView.setImageResource(items.get(position).image);
             holder.textView.setText(items.get(position).imageTitle);
 
-            setAnimation(holder.imageView, position);
+//            setAnimation(holder.imageView, position);
         }
 
         // // 필수로 Generate 되어야 하는 메소드 3
@@ -92,25 +90,27 @@ public class MainActivity extends AppCompatActivity {
             return items.size();
         }
 
-        public class ViewHolder extends RecyclerView.ViewHolder {
+//        private void setAnimation(View viewToAnimate, int position) {
+//            // 새로 보여지는 뷰라면 애니메이션을 해줍니다
+//            if (position > lastPosition) {
+//                Animation animation = AnimationUtils.loadAnimation(context, android.R.anim.slide_in_left);
+//                viewToAnimate.startAnimation(animation);
+//                lastPosition = position;
+//            }
+//        }
+    }
 
-            public ImageView imageView;
-            public TextView textView;
+    public static class ViewHolder extends RecyclerView.ViewHolder {
 
-            public ViewHolder(View view) {
-                super(view);
-                imageView = (ImageView) view.findViewById(R.id.image);
-                textView = (TextView) view.findViewById(R.id.imagetitle);
-            }
-        }
+        public ImageView imageView;
+        public TextView textView;
 
-        private void setAnimation(View viewToAnimate, int position) {
-            // 새로 보여지는 뷰라면 애니메이션을 해줍니다
-            if (position > lastPosition) {
-                Animation animation = AnimationUtils.loadAnimation(context, android.R.anim.slide_in_left);
-                viewToAnimate.startAnimation(animation);
-                lastPosition = position;
-            }
+        public ViewHolder(View view) {
+            super(view);
+            imageView = (ImageView) view.findViewById(R.id.image);
+            textView = (TextView) view.findViewById(R.id.imagetitle);
         }
     }
+
+
 }
