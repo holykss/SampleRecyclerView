@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -29,6 +30,7 @@ public class MainActivity extends AppCompatActivity {
             // Item 리스트에 아이템 객체 넣기
             ArrayList<Item> items = new ArrayList<>();
 
+            items.add(new Item(R.drawable.a, null));
             items.add(new Item(R.drawable.a, "미키마우스"));
             items.add(new Item(R.drawable.b, "인어공주"));
             items.add(new Item(R.drawable.c, "디즈니공주"));
@@ -71,15 +73,24 @@ public class MainActivity extends AppCompatActivity {
             // 새로운 뷰를 만든다
             View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.cardview_item, parent, false);
             ViewHolder holder = new ViewHolder(v);
+
+            if (viewType == -1) {
+                holder.setFullSpan();
+            }
             return holder;
         }
 
         // 필수로 Generate 되어야 하는 메소드 2 : ListView의 getView 부분을 담당하는 메소드
         @Override
         public void onBindViewHolder(ViewHolder holder, int position) {
+            Item item = items.get(position);
 
-            holder.imageView.setImageResource(items.get(position).image);
-            holder.textView.setText(items.get(position).imageTitle);
+            holder.imageView.setImageResource(item.image);
+            if (TextUtils.isEmpty(item.imageTitle)) {
+                holder.setFullSpan();
+            } else {
+                holder.textView.setText(item.imageTitle);
+            }
 
 //            setAnimation(holder.imageView, position);
         }
@@ -98,6 +109,15 @@ public class MainActivity extends AppCompatActivity {
 //                lastPosition = position;
 //            }
 //        }
+
+
+        @Override
+        public int getItemViewType(int position) {
+            if (TextUtils.isEmpty(items.get(position).imageTitle)) {
+                return -1;
+            }
+            return 0;
+        }
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
@@ -109,6 +129,15 @@ public class MainActivity extends AppCompatActivity {
             super(view);
             imageView = (ImageView) view.findViewById(R.id.image);
             textView = (TextView) view.findViewById(R.id.imagetitle);
+        }
+
+        public void setFullSpan() {
+            ViewGroup viewGroup = (ViewGroup) itemView.getRootView();
+            StaggeredGridLayoutManager.LayoutParams params = (StaggeredGridLayoutManager.LayoutParams) viewGroup.getLayoutParams();
+            params.setFullSpan(true);
+            params.height = 150;
+            //params.width = ViewGroup.LayoutParams.MATCH_PARENT;
+            //viewGroup.setLayoutParams(params);
         }
     }
 
