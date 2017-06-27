@@ -1,19 +1,22 @@
 package com.nalive.samplerecyclerview;
 
 import android.content.Context;
+import android.databinding.BindingAdapter;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
-import android.text.TextUtils;
-import android.view.LayoutInflater;
-import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.TextView;
 
 import com.nalive.samplerecyclerview.databinding.ActivityMainBinding;
+import com.nalive.samplerecyclerview.models.BaseModel;
+import com.nalive.samplerecyclerview.models.ModelHorizontalBar;
+import com.nalive.samplerecyclerview.models.ModelMovie;
+import com.nalive.samplerecyclerview.viewholders.BaseViewHolder;
+import com.nalive.samplerecyclerview.viewholders.ViewHolderHorizontalBar;
+import com.nalive.samplerecyclerview.viewholders.ViewHolderMovie;
 
 import java.util.ArrayList;
 
@@ -28,15 +31,15 @@ public class MainActivity extends AppCompatActivity {
 
 
         {
-            // Item 리스트에 아이템 객체 넣기
-            ArrayList<Item> items = new ArrayList<>();
+            // ModelHorizontalBar 리스트에 아이템 객체 넣기
+            ArrayList<BaseModel> items = new ArrayList<>();
 
-            items.add(new Item(R.drawable.a, null));
-            items.add(new Item(R.drawable.a, "미키마우스"));
-            items.add(new Item(R.drawable.b, "인어공주"));
-            items.add(new Item(R.drawable.c, "디즈니공주"));
-            items.add(new Item(R.drawable.d, "토이스토리"));
-            items.add(new Item(R.drawable.e, "니모를 찾아서"));
+            items.add(new ModelHorizontalBar("영화 보실래요?"));
+            items.add(new ModelMovie(R.drawable.a, "미키마우스"));
+            items.add(new ModelMovie(R.drawable.b, "인어공주"));
+            items.add(new ModelMovie(R.drawable.c, "디즈니공주"));
+            items.add(new ModelMovie(R.drawable.d, "토이스토리"));
+            items.add(new ModelMovie(R.drawable.e, "니모를 찾아서"));
 
             RecyclerView.Adapter adapter = new MyAdpater(items, this);
             layout.recyclerView.setAdapter(adapter);
@@ -55,45 +58,36 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-    static class MyAdpater extends RecyclerView.Adapter<ViewHolder> {
+    static class MyAdpater extends RecyclerView.Adapter<BaseViewHolder> {
         private Context context;
-        private ArrayList<Item> items;
+        private ArrayList<BaseModel> items;
 
         // Allows to remember the last item shown on screen
         private int lastPosition = -1;
 
-        public MyAdpater(ArrayList<Item> items, Context context) {
+        public MyAdpater(ArrayList<BaseModel> items, Context context) {
             this.items = items;
             this.context = context;
         }
 
         // 필수로 Generate 되어야 하는 메소드 1 : 새로운 뷰 생성
         @Override
-        public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        public BaseViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
 
-            // 새로운 뷰를 만든다
-            View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.cardview_item, parent, false);
-            ViewHolder holder = new ViewHolder(v);
-
-            if (viewType == -1) {
-                holder.setFullSpan();
+            switch (viewType) {
+                case 0:
+                    return new ViewHolderHorizontalBar(parent);
+                case 1:
+                    return new ViewHolderMovie(parent);
+                default:
+                    return null;
             }
-            return holder;
         }
 
         // 필수로 Generate 되어야 하는 메소드 2 : ListView의 getView 부분을 담당하는 메소드
         @Override
-        public void onBindViewHolder(ViewHolder holder, int position) {
-            Item item = items.get(position);
-
-            holder.imageView.setImageResource(item.image);
-            if (TextUtils.isEmpty(item.imageTitle)) {
-                holder.setFullSpan();
-            } else {
-                holder.textView.setText(item.imageTitle);
-            }
-
-//            setAnimation(holder.imageView, position);
+        public void onBindViewHolder(BaseViewHolder holder, int position) {
+            holder.onBind(items.get(position));
         }
 
         // // 필수로 Generate 되어야 하는 메소드 3
@@ -114,33 +108,13 @@ public class MainActivity extends AppCompatActivity {
 
         @Override
         public int getItemViewType(int position) {
-            if (TextUtils.isEmpty(items.get(position).imageTitle)) {
-                return -1;
-            }
-            return 0;
-        }
-    }
-
-    public static class ViewHolder extends RecyclerView.ViewHolder {
-
-        public ImageView imageView;
-        public TextView textView;
-
-        public ViewHolder(View view) {
-            super(view);
-            imageView = (ImageView) view.findViewById(R.id.image);
-            textView = (TextView) view.findViewById(R.id.imagetitle);
-        }
-
-        public void setFullSpan() {
-            ViewGroup viewGroup = (ViewGroup) itemView.getRootView();
-            StaggeredGridLayoutManager.LayoutParams params = (StaggeredGridLayoutManager.LayoutParams) viewGroup.getLayoutParams();
-            params.setFullSpan(true);
-            params.height = 150;
-            //params.width = ViewGroup.LayoutParams.MATCH_PARENT;
-            //viewGroup.setLayoutParams(params);
+            return items.get(position).getViewType();
         }
     }
 
 
+    @BindingAdapter({"android:src"})
+    public static void setImageViewResource(ImageView imageView, int resource) {
+        imageView.setImageResource(resource);
+    }
 }
