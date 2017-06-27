@@ -20,4 +20,15 @@ public abstract class BaseViewHolder extends RecyclerView.ViewHolder {
     }
 
     public abstract void onBind(BaseModel model);
+
+    public static BaseViewHolder create(ViewGroup parent, int viewType) {
+        switch (viewType) {
+            case 0:
+                return new ViewHolderHorizontalBar(parent);
+            case 1:
+                return new ViewHolderMovie(parent);
+            default:
+                return null;
+        }
+    }
 }
