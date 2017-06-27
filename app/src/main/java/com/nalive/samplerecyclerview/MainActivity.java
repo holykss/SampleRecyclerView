@@ -1,6 +1,7 @@
 package com.nalive.samplerecyclerview;
 
 import android.content.Context;
+import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
@@ -12,18 +13,18 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.nalive.samplerecyclerview.databinding.ActivityMainBinding;
+
 import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity {
-
-    RecyclerView recyclerView;
+    ActivityMainBinding layout;
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        layout = DataBindingUtil.setContentView(this, R.layout.activity_main);
 
-        recyclerView = (RecyclerView) findViewById(R.id.recycler_view);
-        recyclerView.setHasFixedSize(true);
+        layout.recyclerView.setHasFixedSize(true);
 
 
         {
@@ -38,7 +39,7 @@ public class MainActivity extends AppCompatActivity {
             items.add(new Item(R.drawable.e, "니모를 찾아서"));
 
             RecyclerView.Adapter adapter = new MyAdpater(items, this);
-            recyclerView.setAdapter(adapter);
+            layout.recyclerView.setAdapter(adapter);
         }
 
         {
@@ -49,7 +50,7 @@ public class MainActivity extends AppCompatActivity {
             //layoutManager = new GridLayoutManager(this,3);
 
             // 지정된 레이아웃매니저를 RecyclerView에 Set 해주어야한다.
-            recyclerView.setLayoutManager(layoutManager);
+            layout.recyclerView.setLayoutManager(layoutManager);
         }
 
     }
